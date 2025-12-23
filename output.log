@@ -1,0 +1,45 @@
+[dotenv@17.2.3] injecting env (2) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+Starting Migration...
+Testing connection to Supabase...
+Connection check failed: {
+  code: 'PGRST205',
+  details: null,
+  hint: null,
+  message: "Could not find the table 'public.users' in the schema cache"
+}
+Migrating 2 users...
+Error migrating users: {
+  code: 'PGRST205',
+  details: null,
+  hint: null,
+  message: "Could not find the table 'public.users' in the schema cache"
+}
+Migrating 5 courses...
+Error migrating courses: {
+  code: 'PGRST205',
+  details: null,
+  hint: null,
+  message: "Could not find the table 'public.courses' in the schema cache"
+}
+Migrating 3 enrollments...
+Error migrating enrollments: {
+  code: 'PGRST205',
+  details: null,
+  hint: null,
+  message: "Could not find the table 'public.enrollments' in the schema cache"
+}
+Migrating 3 marks...
+Error migrating marks: {
+  code: 'PGRST205',
+  details: null,
+  hint: null,
+  message: "Could not find the table 'public.marks' in the schema cache"
+}
+Migrating 3 claims...
+Error migrating claims: {
+  code: 'PGRST205',
+  details: null,
+  hint: null,
+  message: "Could not find the table 'public.claims' in the schema cache"
+}
+Migration Completed!

@@ -1,0 +1,145 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "name": "John Doe",
+      "email": "student@univ.edu",
+      "regNumber": "STU001",
+      "role": "student",
+      "academicYear": "Year 3",
+      "program": "B.Sc. Computer Science",
+      "department": "Faculty of Computing",
+      "password": "password"
+    },
+    {
+      "id": "u2",
+      "name": "Dr. Smith",
+      "email": "lecturer@univ.edu",
+      "regNumber": "LEC001",
+      "role": "lecturer",
+      "password": "password"
+    }
+  ],
+  "courses": [
+    {
+      "id": "c1",
+      "code": "CS101",
+      "name": "Intro to Computer Science",
+      "lecturerId": "u2"
+    },
+    {
+      "id": "c2",
+      "code": "MATH202",
+      "name": "Advanced Mathematics",
+      "lecturerId": "u2"
+    },
+    {
+      "id": "1766426723459",
+      "code": "1111",
+      "name": "DCF",
+      "lecturerId": "u2"
+    },
+    {
+      "id": "1766426944791",
+      "code": "333",
+      "name": "data structure",
+      "lecturerId": "u2"
+    },
+    {
+      "id": "1766430593281",
+      "code": "111fff",
+      "name": "Software modeling",
+      "lecturerId": "u2"
+    }
+  ],
+  "marks": [
+    {
+      "id": "m1",
+      "studentId": "u1",
+      "courseId": "c1",
+      "cat": 25,
+      "fat": 60,
+      "assignment": 15,
+      "total": 100
+    },
+    {
+      "id": "m2",
+      "studentId": "u1",
+      "courseId": "c2",
+      "cat": 20,
+      "fat": 50,
+      "assignment": 10,
+      "total": 80
+    },
+    {
+      "id": "1766430664757",
+      "studentId": "u1",
+      "courseId": "1766430593281",
+      "cat": 30,
+      "fat": 40,
+      "assignment": 10,
+      "total": 80
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim_1766306777601",
+      "status": "rejected",
+      "submittedAt": "2025-12-21T08:46:17.601Z",
+      "studentId": "u1",
+      "courseId": "c1",
+      "assessmentType": "fat",
+      "explanation": "i belive i could have more marks\n",
+      "originalMark": 60,
+      "markId": "m1",
+      "lecturerComment": "nothing to claim about sir!\n",
+      "resolvedAt": "2025-12-21T08:49:34.990Z"
+    },
+    {
+      "id": "claim_1766309736434",
+      "status": "approved",
+      "submittedAt": "2025-12-21T09:35:36.434Z",
+      "studentId": "u1",
+      "courseId": "c1",
+      "assessmentType": "assignment",
+      "explanation": "no marks are deliverd for me\n",
+      "originalMark": 10,
+      "markId": "m1",
+      "lecturerComment": "your marks are submitted congrats!",
+      "resolvedAt": "2025-12-21T09:36:20.833Z"
+    },
+    {
+      "id": "claim_1766341740796",
+      "status": "approved",
+      "submittedAt": "2025-12-21T18:29:00.796Z",
+      "studentId": "u1",
+      "courseId": "c2",
+      "assessmentType": "assignment",
+      "explanation": "i think i deserve more\n",
+      "originalMark": 8,
+      "markId": "m2",
+      "lecturerComment": "problem solved",
+      "resolvedAt": "2025-12-21T18:30:17.302Z"
+    }
+  ],
+  "enrollments": [
+    {
+      "id": "1766426749966",
+      "studentId": "u1",
+      "courseId": "1766426723459",
+      "joinedAt": "2025-12-22T18:05:49.966Z"
+    },
+    {
+      "id": "1766426971010",
+      "studentId": "u1",
+      "courseId": "1766426944791",
+      "joinedAt": "2025-12-22T18:09:31.010Z"
+    },
+    {
+      "id": "1766430621064",
+      "studentId": "u1",
+      "courseId": "1766430593281",
+      "joinedAt": "2025-12-22T19:10:21.064Z"
+    }
+  ]
+}
