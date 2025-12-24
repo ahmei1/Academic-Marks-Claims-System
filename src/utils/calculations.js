@@ -5,11 +5,15 @@
  * @param {number} assignment - Assignment Score
  * @returns {number} Total Score (0-100)
  */
-export const calculateTotalMark = (cat, fat, assignment) => {
+export const calculateTotalMark = (cat, fat, individualAssignment, groupAssignment, quiz, attendance) => {
     const c = parseFloat(cat) || 0;
     const f = parseFloat(fat) || 0;
-    const a = parseFloat(assignment) || 0;
-    return Number((c + f + a).toFixed(2));
+    const i = parseFloat(individualAssignment) || 0;
+    const g = parseFloat(groupAssignment) || 0;
+    const q = parseFloat(quiz) || 0;
+    const att = parseFloat(attendance) || 0;
+
+    return Number((c + f + i + g + q + att).toFixed(2));
 };
 
 /**

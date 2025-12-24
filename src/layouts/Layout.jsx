@@ -2,7 +2,8 @@ import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { LogOut, GraduationCap, Moon, Sun } from 'lucide-react';
+import { LogOut, GraduationCap } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 
 const Layout = () => {
     const { user, logout } = useAuth();
@@ -30,13 +31,7 @@ const Layout = () => {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-400"
-                            title="Toggle Theme"
-                        >
-                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                        </button>
+                        <ThemeToggle />
 
                         <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-slate-700">
                             <div className="text-right hidden md:block">

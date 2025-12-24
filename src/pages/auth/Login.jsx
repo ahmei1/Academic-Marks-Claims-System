@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import ThemeToggle from '../../components/ThemeToggle';
 
 const Login = () => {
     const [isSignUp, setIsSignUp] = useState(false);
@@ -74,10 +75,14 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors duration-200">
+        <div className="flex items-center justify-center min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors duration-200 relative">
+            <div className="absolute top-4 right-4">
+                <ThemeToggle />
+            </div>
             <div className="w-full max-w-md p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mx-4">
-                <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Academic Marks System</h2>
+                <div className="text-center mb-8 items-center flex flex-col gap-4">
+                    <img src="src/assets/OIP (1).webp" alt="" width={200} className='rounded-xl border hover:border-blue-500 transition-all duration-300' />
+                    <h2 className="text-2xl font-bold text-slate-800 dark:text-white">UNILAK Academic Marks System</h2>
                     <p className="text-slate-500 dark:text-slate-400 mt-2">Sign in to your account</p>
                 </div>
 
@@ -106,7 +111,7 @@ const Login = () => {
                     {isSignUp && (
                         <>
                             <div>
-                                <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Full Name</label>
+                                <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300 ">Full Name</label>
                                 <input
                                     type="text" required
                                     value={name} onChange={(e) => setName(e.target.value)}
@@ -129,7 +134,7 @@ const Login = () => {
                         <input
                             type="text" required
                             value={regNumber} onChange={(e) => setRegNumber(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none  hover:border-blue-500 transition-all duration-300"
                         />
                     </div>
 

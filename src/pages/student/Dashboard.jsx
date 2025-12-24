@@ -37,7 +37,7 @@ const StudentDashboard = () => {
             const marksWithCourse = studentMarks.map(m => ({
                 ...m,
                 // Use utility for safe calculation (and backend value as fallback if exists)
-                total: m.total || calculateTotalMark(m.cat, m.fat, m.assignment),
+                total: m.total || calculateTotalMark(m.cat, m.fat, m.individualAssignment, m.groupAssignment, m.quiz, m.attendance),
                 course: allCourses.find(c => c.id === m.courseId)
             }));
 
@@ -232,24 +232,42 @@ const StudentDashboard = () => {
 
                                 <div className="grid grid-cols-3 gap-2 mb-4 text-sm">
                                     <div className="bg-slate-50 dark:bg-slate-700/50 p-2 rounded text-center">
+                                        <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Ind. Asgn</div>
+                                        <div className="font-semibold text-slate-900 dark:text-white">{mark.individualAssignment || 0}</div>
+                                    </div>
+                                    <div className="bg-slate-50 dark:bg-slate-700/50 p-2 rounded text-center">
+                                        <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Grp. Asgn</div>
+                                        <div className="font-semibold text-slate-900 dark:text-white">{mark.groupAssignment || 0}</div>
+                                    </div>
+                                    <div className="bg-slate-50 dark:bg-slate-700/50 p-2 rounded text-center">
+                                        <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Quiz</div>
+                                        <div className="font-semibold text-slate-900 dark:text-white">{mark.quiz || 0}</div>
+                                    </div>
+                                    <div className="bg-slate-50 dark:bg-slate-700/50 p-2 rounded text-center">
                                         <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">CAT</div>
-                                        <div className="font-semibold text-slate-900 dark:text-white">{mark.cat}</div>
+                                        <div className="font-semibold text-slate-900 dark:text-white">{mark.cat || 0}</div>
                                     </div>
                                     <div className="bg-slate-50 dark:bg-slate-700/50 p-2 rounded text-center">
                                         <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">FAT</div>
-                                        <div className="font-semibold text-slate-900 dark:text-white">{mark.fat}</div>
+                                        <div className="font-semibold text-slate-900 dark:text-white">{mark.fat || 0}</div>
                                     </div>
                                     <div className="bg-slate-50 dark:bg-slate-700/50 p-2 rounded text-center">
-                                        <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Assign</div>
-                                        <div className="font-semibold text-slate-900 dark:text-white">{mark.assignment}</div>
+                                        <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Attd</div>
+                                        <div className="font-semibold text-slate-900 dark:text-white">{mark.attendance || 0}</div>
                                     </div>
                                 </div>
 
                                 <button
-                                    className="w-full flex items-center justify-center gap-2 py-2 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors text-sm font-medium"
-                                    onClick={() => handleOpenClaim(mark)}
+                                    disabled={!mark.course?.claimsEnabled}
+                                    className={`w-full flex items-center justify-center gap-2 py-2 border rounded-lg transition-colors text-sm font-medium
+                                        ${mark.course?.claimsEnabled
+                                            ? 'text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900 hover:bg-blue-50 dark:hover:bg-blue-900/30'
+                                            : 'text-slate-400 border-slate-200 dark:border-slate-700 cursor-not-allowed opacity-60'}`}
+                                    title={!mark.course?.claimsEnabled ? "Lecturer has disabled claims for this course" : ""}
+                                    onClick={() => mark.course?.claimsEnabled && handleOpenClaim(mark)}
                                 >
-                                    <PlusCircle size={16} /> Request Review
+                                    {mark.course?.claimsEnabled ? <PlusCircle size={16} /> : <Clock size={16} />}
+                                    {mark.course?.claimsEnabled ? 'Request Review' : 'Claims Closed'}
                                 </button>
                             </div>
                         ))}
@@ -309,9 +327,12 @@ const StudentDashboard = () => {
                                         value={claimReason}
                                         onChange={(e) => setClaimReason(e.target.value)}
                                     >
-                                        <option value="cat">Continuous Assessment (CAT)</option>
-                                        <option value="fat">Final Assessment (FAT)</option>
-                                        <option value="assignment">Assignment</option>
+                                        <option value="individualAssignment">Individual Assignment</option>
+                                        <option value="groupAssignment">Group Assignment</option>
+                                        <option value="quiz">Quiz</option>
+                                        <option value="cat">CAT</option>
+                                        <option value="fat">FAT</option>
+                                        <option value="attendance">Attendance</option>
                                     </select>
                                 </div>
                                 <div className="mb-6">
