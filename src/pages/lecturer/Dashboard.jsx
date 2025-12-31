@@ -65,7 +65,6 @@ const LecturerDashboard = () => {
                 groupAssignment: existingMark?.groupAssignment || 0,
                 quiz: existingMark?.quiz || 0,
                 attendance: existingMark?.attendance || 0,
-                attendance: existingMark?.attendance || 0,
                 markId: existingMark?.id || null,
                 isPublished: existingMark?.isPublished || false
             };
