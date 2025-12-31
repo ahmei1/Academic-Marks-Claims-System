@@ -184,14 +184,13 @@ const StudentDashboard = () => {
                 {/* Available Courses Section */}
                 <section className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 h-fit">
                     <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800 dark:text-white">
-                        Available Courses ({courses.length})
+                        Available Courses
                     </h3>
                     <div className="flex flex-col gap-3">
                         {courses.length === 0 && <p className="text-slate-500 italic">No courses available.</p>}
                         {courses.map(course => {
                             const hasMark = marks.some(m => m.courseId === course.id);
-                            // DEBUG: Commenting out this check to see if it's hiding valid courses
-                            // if (hasMark) return null; 
+                            if (hasMark) return null;
 
                             return (
                                 <div key={course.id} className="flex justify-between items-center p-3 border-b border-slate-100 dark:border-slate-700 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors rounded-lg">
