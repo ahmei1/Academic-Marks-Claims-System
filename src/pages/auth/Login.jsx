@@ -81,9 +81,15 @@ const Login = () => {
             <div className="absolute top-4 right-4 z-10">
                 <ThemeToggle />
             </div>
+            import logo from '../../assets/unilak_logo.png';
+
+const Login = () => {
+    // ... code ...
+    return (
+            // ...
             <div className="w-full max-w-md p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mx-4">
                 <div className="text-center mb-8 items-center flex flex-col gap-4">
-                    <img src="src/assets/OIP (1).webp" alt="" width={200} className='rounded-xl border hover:border-blue-500 transition-all duration-300' />
+                    <img src={logo} alt="UNILAK Logo" width={120} className='mb-2' />
                     <h2 className="text-2xl font-bold text-slate-800 dark:text-white">UNILAK Academic Marks System</h2>
                     <p className="text-slate-500 dark:text-slate-400 mt-2">Sign in to your account</p>
                 </div>
@@ -96,7 +102,7 @@ const Login = () => {
 
                 <div className="flex justify-between mb-6">
                     <button
-                        
+
                         className={`text-lg font-bold pb-2 px-4 transition-colors ${!isSignUp ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400'}`}
                         onClick={() => setIsSignUp(false)}
                     >
@@ -155,7 +161,7 @@ const Login = () => {
                                     Lecturer
                                 </label>
                             </div>
-                        </div>      
+                        </div>
                     )}
 
                     {isSignUp && role === 'lecturer' && (
