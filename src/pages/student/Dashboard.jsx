@@ -10,7 +10,6 @@ const StudentDashboard = () => {
     const [marks, setMarks] = useState([]);
     const [claims, setClaims] = useState([]);
     const [courses, setCourses] = useState([]);
-    const [rawCourses, setRawCourses] = useState([]); // Debugging
     const [joinedCourses, setJoinedCourses] = useState([]);
     const [showClaimForm, setShowClaimForm] = useState(false);
     const [selectedMark, setSelectedMark] = useState(null);
@@ -77,7 +76,6 @@ const StudentDashboard = () => {
                 return yearMatch && intakeMatch && cohortMatch;
             });
 
-            setRawCourses(allCourses); // Store raw for debug
             setCourses(filteredCourses);
             setClaims(studentClaims);
         } catch (error) {
