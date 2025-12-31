@@ -82,9 +82,7 @@ const Login = () => {
                 <ThemeToggle />
             </div>
 
-    // ... code ...
-            return (
-            // ...
+
             <div className="w-full max-w-md p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mx-4">
                 <div className="text-center mb-8 items-center flex flex-col gap-4">
                     <img src={logo} alt="UNILAK Logo" width={120} className='mb-2' />
