@@ -359,54 +359,7 @@ const StudentDashboard = () => {
                     </div>
                 </div>
             )}
-            {/* DEBUG PANEL */}
-            <div className="mt-12 p-6 bg-slate-900 rounded-xl border border-slate-700 font-mono text-sm text-slate-300 overflow-x-auto">
-                <h3 className="text-red-400 font-bold mb-4 border-b border-slate-700 pb-2">🚧 Strict Filtering Debugger</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h4 className="text-white font-bold mb-2">Based on Your Profile:</h4>
-                        <div className="space-y-1">
-                            <p><span className="text-slate-500">Academic Year:</span> <span className="text-yellow-400">"{user.academicYear}"</span></p>
-                            <p><span className="text-slate-500">Intake:</span> <span className="text-yellow-400">"{user.intake}"</span></p>
-                            <p><span className="text-slate-500">Cohort Year:</span> <span className="text-yellow-400">"{user.cohortYear}"</span></p>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 className="text-white font-bold mb-2">Available Courses Check:</h4>
-                        <div className="space-y-2 max-h-60 overflow-y-auto">
-                            {rawCourses.map(c => {
-                                const courseYear = (c.targetYear || '').replace(/Year\s*/i, '').trim();
-                                const studentYear = (user.academicYear || '').replace(/Year\s*/i, '').trim();
-                                const yearMatch = !c.targetYear || (courseYear === studentYear);
 
-                                const courseIntake = String(c.intake || '').trim();
-                                const studentIntake = String(user.intake || '').trim();
-                                const intakeMatch = !courseIntake || (courseIntake === studentIntake);
-
-                                const courseCohort = String(c.cohortYear || '').trim();
-                                const studentCohort = String(user.cohortYear || '').trim();
-                                const cohortMatch = !courseCohort || (courseCohort === studentCohort);
-
-                                const isMatch = yearMatch && intakeMatch && cohortMatch;
-
-                                if (joinedCourses.find(j => j.id === c.id)) return null; // Skip joined
-
-                                return (
-                                    <div key={c.id} className={`p-2 rounded border ${isMatch ? 'border-green-500/50 bg-green-900/10' : 'border-red-500/50 bg-red-900/10'}`}>
-                                        <div className="font-bold">{c.code}</div>
-                                        <div className="text-xs grid grid-cols-3 gap-2 mt-1">
-                                            <span className={yearMatch ? 'text-green-400' : 'text-red-400'}>Yr: "{courseYear}" vs "{studentYear}"</span>
-                                            <span className={intakeMatch ? 'text-green-400' : 'text-red-400'}>In: "{courseIntake}" vs "{studentIntake}"</span>
-                                            <span className={cohortMatch ? 'text-green-400' : 'text-red-400'}>Co: "{courseCohort}" vs "{studentCohort}"</span>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
-                <p className="text-xs text-slate-500 mt-4">*Strict Mode: All 3 fields must match exactly (or be empty on the course).</p>
-            </div>
 
         </PageTransition>
     );
