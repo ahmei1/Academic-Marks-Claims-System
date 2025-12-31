@@ -57,17 +57,17 @@ const StudentDashboard = () => {
                 const courseYear = (c.targetYear || '').replace(/Year\s*/i, '').trim();
                 const studentYear = (user.academicYear || '').replace(/Year\s*/i, '').trim();
 
-                const yearMatch = !c.targetYear || courseYear === studentYear;
+                // If student has no year set, show all courses (wildcard). If course has no year, also show.
+                const yearMatch = !c.targetYear || !studentYear || courseYear === studentYear;
 
                 // Strict match for intake/cohort if set on course, otherwise loose
-                // Normalize to strings to handle number/string differences
                 const courseIntake = String(c.intake || '').trim();
                 const studentIntake = String(user.intake || '').trim();
-                const intakeMatch = !courseIntake || courseIntake === studentIntake;
+                const intakeMatch = !c.intake || !studentIntake || courseIntake === studentIntake;
 
                 const courseCohort = String(c.cohortYear || '').trim();
                 const studentCohort = String(user.cohortYear || '').trim();
-                const cohortMatch = !courseCohort || courseCohort === studentCohort;
+                const cohortMatch = !c.cohortYear || !studentCohort || courseCohort === studentCohort;
 
                 return yearMatch && intakeMatch && cohortMatch;
             });
