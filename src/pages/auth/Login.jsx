@@ -85,7 +85,7 @@ const Login = () => {
 
             <div className="w-full max-w-md p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mx-4">
                 <div className="text-center mb-8 items-center flex flex-col gap-4">
-                    <img src={logo} alt="UNILAK Logo" width={120} className='mb-2' />
+                    <img src={logo} alt="UNILAK Logo" width={200} height={200} className='rounded-xl ' />
                     <h2 className="text-2xl font-bold text-slate-800 dark:text-white">UNILAK Academic Marks System</h2>
                     <p className="text-slate-500 dark:text-slate-400 mt-2">Sign in to your account</p>
                 </div>
