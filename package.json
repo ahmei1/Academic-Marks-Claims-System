@@ -1,7 +1,6 @@
 {
   "name": "claim-system",
   "private": true,
-  "private": true,
   "version": "0.0.0",
   "homepage": "https://ahmei1.github.io/Academic-Marks-Claims-System",
   "type": "module",
