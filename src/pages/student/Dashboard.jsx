@@ -53,21 +53,25 @@ const StudentDashboard = () => {
                 // If already joined, don't show in "Available"
                 if (enrolledCourseIds.includes(c.id)) return false;
 
-                // Normalize "Year 2" -> "2" for loose comparison
+                // Strict filtering as requested by USER:
+                // Student MUST match the Course's Intake and Cohort Year.
+
+                // 1. Year Match (Loose "Year 1" vs "1" handling, but strict requirement)
                 const courseYear = (c.targetYear || '').replace(/Year\s*/i, '').trim();
                 const studentYear = (user.academicYear || '').replace(/Year\s*/i, '').trim();
+                const yearMatch = !c.targetYear || (courseYear === studentYear);
 
-                // If student has no year set, show all courses (wildcard). If course has no year, also show.
-                const yearMatch = !c.targetYear || !studentYear || courseYear === studentYear;
-
-                // Strict match for intake/cohort if set on course, otherwise loose
+                // 2. Intake Match (Strict)
                 const courseIntake = String(c.intake || '').trim();
                 const studentIntake = String(user.intake || '').trim();
-                const intakeMatch = !c.intake || !studentIntake || courseIntake === studentIntake;
+                // If course has intake, student MUST match. If course has no intake, allow all? 
+                // Assumed: If course implies specific intake, filter. 
+                const intakeMatch = !courseIntake || (courseIntake === studentIntake);
 
+                // 3. Cohort Match (Strict)
                 const courseCohort = String(c.cohortYear || '').trim();
                 const studentCohort = String(user.cohortYear || '').trim();
-                const cohortMatch = !c.cohortYear || !studentCohort || courseCohort === studentCohort;
+                const cohortMatch = !courseCohort || (courseCohort === studentCohort);
 
                 return yearMatch && intakeMatch && cohortMatch;
             });
