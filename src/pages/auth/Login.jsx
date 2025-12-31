@@ -3,7 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../../components/ThemeToggle';
 import LiveBackground from '../../components/LiveBackground';
-
+import logo from '../../assets/unilak_logo.png';
 const Login = () => {
     const [isSignUp, setIsSignUp] = useState(false);
     const [regNumber, setRegNumber] = useState('');
@@ -81,11 +81,9 @@ const Login = () => {
             <div className="absolute top-4 right-4 z-10">
                 <ThemeToggle />
             </div>
-            import logo from '../../assets/unilak_logo.png';
 
-const Login = () => {
     // ... code ...
-    return (
+            return (
             // ...
             <div className="w-full max-w-md p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mx-4">
                 <div className="text-center mb-8 items-center flex flex-col gap-4">
