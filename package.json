@@ -1,13 +1,17 @@
 {
   "name": "claim-system",
   "private": true,
+  "private": true,
   "version": "0.0.0",
+  "homepage": "https://ahmei1.github.io/Academic-Marks-Claims-System",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.89.0",
@@ -27,6 +31,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "framer-motion": "^12.23.26",
+    "gh-pages": "^6.3.0",
     "jsdom": "^27.3.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",

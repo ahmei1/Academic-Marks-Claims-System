@@ -33,3 +33,16 @@
   --card-bg: #1e293b;
   --background-color: #0f172a;
 }
+
+.element {
+  transition: all 0.3s ease;
+}
+
+.element:hover {
+  transform: scale(1.1) rotate(0deg) translate(0px, 0px) skewX(0deg);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+  opacity: 1;
+  filter: brightness(1);
+  background-color: #667eea;
+  color: #ffffff;
+}

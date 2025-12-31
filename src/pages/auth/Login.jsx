@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../../components/ThemeToggle';
+import LiveBackground from '../../components/LiveBackground';
 
 const Login = () => {
     const [isSignUp, setIsSignUp] = useState(false);
@@ -75,8 +76,9 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors duration-200 relative">
-            <div className="absolute top-4 right-4">
+        <div className="flex items-center justify-center min-h-screen transition-colors duration-200 relative overflow-hidden">
+            <LiveBackground />
+            <div className="absolute top-4 right-4 z-10">
                 <ThemeToggle />
             </div>
             <div className="w-full max-w-md p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mx-4">
@@ -94,6 +96,7 @@ const Login = () => {
 
                 <div className="flex justify-between mb-6">
                     <button
+                        
                         className={`text-lg font-bold pb-2 px-4 transition-colors ${!isSignUp ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400'}`}
                         onClick={() => setIsSignUp(false)}
                     >
@@ -133,8 +136,9 @@ const Login = () => {
                         <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Registration Number / Staff ID</label>
                         <input
                             type="text" required
+                            placeholder='e.g 12345/2024'
                             value={regNumber} onChange={(e) => setRegNumber(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none  hover:border-blue-500 transition-all duration-300"
+                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none  hover:border-blue-500 transition-all duration-300"
                         />
                     </div>
 
@@ -151,7 +155,7 @@ const Login = () => {
                                     Lecturer
                                 </label>
                             </div>
-                        </div>
+                        </div>      
                     )}
 
                     {isSignUp && role === 'lecturer' && (
@@ -161,7 +165,7 @@ const Login = () => {
                                 type="password" required
                                 placeholder="Enter Admin Code to register as Lecturer"
                                 value={accessCode} onChange={(e) => setAccessCode(e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
                             />
                         </div>
                     )}
@@ -173,7 +177,7 @@ const Login = () => {
                                 <input
                                     type="text" placeholder="e.g. Year 1"
                                     value={academicYear} onChange={(e) => setAcademicYear(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
                                 />
                             </div>
                             <div>
@@ -181,7 +185,7 @@ const Login = () => {
                                 <input
                                     type="text" placeholder="e.g. CS"
                                     value={program} onChange={(e) => setProgram(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
                                 />
                             </div>
                             <div>
@@ -189,7 +193,7 @@ const Login = () => {
                                 <input
                                     type="text" placeholder="e.g. 9"
                                     value={intake} onChange={(e) => setIntake(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
                                 />
                             </div>
                             <div>
@@ -197,7 +201,7 @@ const Login = () => {
                                 <input
                                     type="text" placeholder="e.g. 2024"
                                     value={cohortYear} onChange={(e) => setCohortYear(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
                                 />
                             </div>
                         </div>
@@ -208,7 +212,7 @@ const Login = () => {
                         <input
                             type="password" required
                             value={password} onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                     </div>
 

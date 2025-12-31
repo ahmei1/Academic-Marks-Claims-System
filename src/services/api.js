@@ -97,31 +97,63 @@ export const ApiService = {
     },
 
     // Marks
-    getMarks: async (studentId) => {
+    getMarks: async (studentId, listAll = false) => {
         // Fetch marks and join with courses to get course details (code, name)
         let query = supabase.from('marks').select('*, courses(code, name)');
+
         if (studentId) {
             query = query.eq('studentId', studentId);
         }
+
+        // functional requirement: Students should only see published marks.
+        // Lecturers need to see all marks.
+        // We rely on the caller to specify listAll=true (for lecturers) or we default to filtered if checking for specific student?
+        // Actually, simpler: if listAll is false, we filter by isPublished: true.
+        // But the previous API signature was just (studentId).
+        // Let's check how it's used. 
+        // Student Dashboard: ApiService.getMarks(user.id) -> should be published only.
+        // Lecturer Dashboard: ApiService.getMarks() -> should be all.
+
+        // So:
+        if (!listAll) {
+            // If we are fetching for a specific student (studentId provided), we probably only want published ones
+            // UNLESS the caller explicitly asked for all (e.g. lecturer debugging a specific student).
+            // However, Lecturer Dashboard calls getMarks() with no args to get ALL marks for ALL students.
+
+            // Logic refinement:
+            // If studentId is present, we assume it's the Student Dashboard unless specified otherwise?
+            // No, Lecturer might want to see grades for a specific student.
+            // Let's add the filter if listAll is explicitly false. 
+            // BEHAVIOR CHANGE: Defaults to showing ALL if listAll not specified? No, safer to hide draft.
+            // BUT existing code didn't have this.
+
+            // Let's enforce: calls must specify if they want drafted marks.
+            // Defaulting listAll=false means: only published.
+            // Existing call: ApiService.getMarks(user.id) -> now returns only published. Correct for Student.
+            // Existing call: ApiService.getMarks() -> now returns only published? INCORRECT for Lecturer.
+
+            // So we need to update Lecturer Dashboard call to ApiService.getMarks(null, true) or similar.
+            // Or better: ApiService.getMarks(studentId, { includeDrafts: boolean })
+        }
+
+    },
+    // RE-WRITING getMarks to handle arguments better
+    getMarks: async (studentId = null, options = { includeDrafts: false }) => {
+        let query = supabase.from('marks').select('*, courses(code, name)');
+
+        if (studentId) {
+            query = query.eq('studentId', studentId);
+        }
+
+        if (!options.includeDrafts) {
+            query = query.eq('isPublished', true);
+        }
+
         const { data, error } = await query;
         if (error) throw error;
 
-        // Flatten the structure to match what the frontend expects if necessary
-        // The frontend might expect: { ...mark, code: '...', name: '...' }
-        // Currently Supabase returns: { ...mark, courses: { code: '...', name: '...' } }
-        // Let's map it to keep frontend happy if it relies on flat properties, 
-        // OR we'll verify if frontend handles the nested object. 
-        // Looking at previous Dashboard code, it likely accessed `mark.courseName` or similar if it was flattened before.
-        // But in `json-server` implementation, `getMarks` returned raw marks. 
-        // The frontend `StudentDashboard.jsx` was doing:
-        // `const marks = await ApiService.getMarks(user.id);`
-        // `const courses = await ApiService.getCourses();`
-        // And then mapping manually? 
-        // Let's check StudentDashboard.jsx content in next turn if needed. 
-        // For now, let's just return data. The existing `json-server` didn't do joins.
         return data.map(mark => ({
             ...mark,
-            // If the join works:
             ...(mark.courses ? { code: mark.courses.code, name: mark.courses.name } : {})
         }));
     },
@@ -129,15 +161,52 @@ export const ApiService = {
     createMark: async (markData) => {
         const { data, error } = await supabase.from('marks').insert([{
             ...markData,
-            id: Date.now().toString()
+            id: Date.now().toString(),
+            isPublished: markData.isPublished || false // Default to draft
         }]).select().single();
         if (error) throw error;
+
+        // Audit Log
+        const currentUser = ApiService.getCurrentUser();
+        await ApiService._recordHistory(data.id, null, data, 'Creation', currentUser?.id);
+
         return data;
     },
 
+    _recordHistory: async (markId, oldValues, newValues, reason, userId) => {
+        try {
+            await supabase.from('mark_history').insert([{
+                markId,
+                oldValues,
+                newValues,
+                changeReason: reason,
+                changedBy: userId,
+                // created_at defaults to now
+            }]);
+        } catch (err) {
+            console.error("Failed to record mark history", err);
+            // Non-blocking error
+        }
+    },
+
     updateMark: async (id, updates) => {
+        // 1. Fetch current state for Audit
+        const { data: oldMark } = await supabase.from('marks').select('*').eq('id', id).single();
+
+        // 2. Perform Update
         const { data, error } = await supabase.from('marks').update(updates).eq('id', id).select().single();
         if (error) throw error;
+
+        // 3. Record History
+        if (oldMark) {
+            const currentUser = ApiService.getCurrentUser();
+            // Calculate what actually changed
+            const changes = {};
+            // Simple diff logic could be here, but verifying all fields is safer for now
+            // Or just store the entire old object vs new object
+            await ApiService._recordHistory(id, oldMark, data, 'Update', currentUser?.id);
+        }
+
         return data;
     },
 

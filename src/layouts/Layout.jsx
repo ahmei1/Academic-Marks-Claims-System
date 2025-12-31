@@ -20,7 +20,7 @@ const Layout = () => {
     if (!user) return null;
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors duration-200">
+        <div className="min-h-screen text-slate-900 dark:text-slate-100 transition-colors duration-200 relative">
             {/* Header / Navbar */}
             <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50">
                 <div className="container mx-auto px-4 h-16 flex justify-between items-center">
