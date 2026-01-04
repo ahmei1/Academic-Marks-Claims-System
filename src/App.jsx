@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Login from './pages/auth/Login';
 import Layout from './layouts/Layout';
@@ -32,7 +32,7 @@ const RequireAuth = ({ children, allowedRoles }) => {
 
 function App() {
     return (
-        <Router basename={import.meta.env.BASE_URL}>
+        <Router>
             <Routes>
                 <Route path="/login" element={<Login />} />
 
