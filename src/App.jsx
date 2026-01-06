@@ -5,6 +5,7 @@ import Login from './pages/auth/Login';
 import Layout from './layouts/Layout';
 import StudentDashboard from './pages/student/Dashboard';
 import LecturerDashboard from './pages/lecturer/Dashboard';
+import HodDashboard from './pages/hod/Dashboard';
 
 const RequireAuth = ({ children, allowedRoles }) => {
     const { user, loading } = useAuth();
@@ -17,7 +18,10 @@ const RequireAuth = ({ children, allowedRoles }) => {
     }
 
     if (allowedRoles && !allowedRoles.includes(user.role)) {
-        return <Navigate to={user.role === 'student' ? '/student' : '/lecturer'} replace />;
+        if (user.role === 'student') return <Navigate to="/student" replace />;
+        if (user.role === 'lecturer') return <Navigate to="/lecturer" replace />;
+        if (user.role === 'hod') return <Navigate to="/hod" replace />;
+        return <Navigate to="/" replace />;
     }
 
     return children;
@@ -50,6 +54,14 @@ function App() {
                         element={
                             <RequireAuth allowedRoles={['lecturer']}>
                                 <LecturerDashboard />
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="/hod/*"
+                        element={
+                            <RequireAuth allowedRoles={['hod']}>
+                                <HodDashboard />
                             </RequireAuth>
                         }
                     />

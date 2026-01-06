@@ -5,20 +5,9 @@ import ThemeToggle from '../../components/ThemeToggle';
 import LiveBackground from '../../components/LiveBackground';
 import logo from '../../assets/unilak_logo.png';
 const Login = () => {
-    const [isSignUp, setIsSignUp] = useState(false);
+    // const [isSignUp, setIsSignUp] = useState(false); // Signup disabled
     const [regNumber, setRegNumber] = useState('');
     const [password, setPassword] = useState('');
-
-    // Sign Up States
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [role, setRole] = useState('student');
-    const [academicYear, setAcademicYear] = useState('');
-    const [program, setProgram] = useState('');
-    const [intake, setIntake] = useState('');
-    const [cohortYear, setCohortYear] = useState('');
-    const [accessCode, setAccessCode] = useState(''); // New state for Lecturer Access Code
-
     const [error, setError] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -31,47 +20,10 @@ const Login = () => {
             const user = JSON.parse(localStorage.getItem('user'));
             if (user?.role === 'student') navigate('/student');
             else if (user?.role === 'lecturer') navigate('/lecturer');
+            else if (user?.role === 'hod') navigate('/hod');
+            else navigate('/'); // Fallback
         } else {
-            setError('Invalid Registration Number or Password');
-        }
-    };
-
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        setError('');
-
-        // Lecturer Access Code Validation
-        if (role === 'lecturer' && accessCode !== 'ADMIN_1234') {
-            setError('Invalid Lecturer Access Code. Contact Administrator.');
-            return;
-        }
-
-        try {
-            // Dynamically import ApiService here or move import to top if module system allows safe circular deps (it should be fine)
-            const { ApiService } = await import('../../services/api');
-
-            const userData = {
-                regNumber,
-                password,
-                name,
-                email,
-                role,
-                ...(role === 'student' ? { academicYear, program, intake, cohortYear } : {})
-            };
-
-            await ApiService.register(userData);
-
-            // Auto login logic is handled inside register (localStorage set), but we need to update context if possible. 
-            // Better to just call login() to refresh context state properly.
-            if (await login(regNumber, password)) {
-                const user = JSON.parse(localStorage.getItem('user'));
-                if (user?.role === 'student') navigate('/student');
-                else if (user?.role === 'lecturer') navigate('/lecturer');
-            }
-
-        } catch (err) {
-            console.error(err);
-            setError(err.message || 'Registration failed');
+            setError('Invalid Registration Number/ID or Password');
         }
     };
 
@@ -81,7 +33,6 @@ const Login = () => {
             <div className="absolute top-4 right-4 z-10">
                 <ThemeToggle />
             </div>
-
 
             <div className="w-full max-w-md p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mx-4">
                 <div className="text-center mb-8 items-center flex flex-col gap-4">
@@ -96,140 +47,41 @@ const Login = () => {
                     </div>
                 )}
 
-                <div className="flex justify-between mb-6">
-                    <button
-
-                        className={`text-lg font-bold pb-2 px-4 transition-colors ${!isSignUp ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400'}`}
-                        onClick={() => setIsSignUp(false)}
-                    >
-                        Sign In
-                    </button>
-                    <button
-                        className={`text-lg font-bold pb-2 px-4 transition-colors ${isSignUp ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-400'}`}
-                        onClick={() => setIsSignUp(true)}
-                    >
-                        Sign Up
-                    </button>
-                </div>
-
-                <form onSubmit={isSignUp ? handleRegister : handleLogin} className="space-y-4">
-                    {isSignUp && (
-                        <>
-                            <div>
-                                <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300 ">Full Name</label>
-                                <input
-                                    type="text" required
-                                    value={name} onChange={(e) => setName(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Email</label>
-                                <input
-                                    type="email" required
-                                    value={email} onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                />
-                            </div>
-                        </>
-                    )}
-
+                <form onSubmit={handleLogin} className="space-y-6">
                     <div>
-                        <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Registration Number / Staff ID</label>
+                        <label className="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                            Registration Number (Students) / Staff ID (Staff)
+                        </label>
                         <input
                             type="text" required
-                            placeholder='e.g 12345/2024'
+                            placeholder='e.g. S12345 or L001'
                             value={regNumber} onChange={(e) => setRegNumber(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none  hover:border-blue-500 transition-all duration-300"
+                            className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                         />
                     </div>
 
-                    {isSignUp && (
-                        <div>
-                            <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Role</label>
-                            <div className="flex gap-4 mt-1">
-                                <label className="flex items-center gap-2 cursor-pointer dark:text-white">
-                                    <input type="radio" name="role" value="student" checked={role === 'student'} onChange={() => setRole('student')} className="text-blue-600 focus:ring-blue-500" />
-                                    Student
-                                </label>
-                                <label className="flex items-center gap-2 cursor-pointer dark:text-white">
-                                    <input type="radio" name="role" value="lecturer" checked={role === 'lecturer'} onChange={() => setRole('lecturer')} className="text-blue-600 focus:ring-blue-500" />
-                                    Lecturer
-                                </label>
-                            </div>
-                        </div>
-                    )}
-
-                    {isSignUp && role === 'lecturer' && (
-                        <div>
-                            <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Admin Access Code <span className="text-red-500">*</span></label>
-                            <input
-                                type="password" required
-                                placeholder="Enter Admin Code to register as Lecturer"
-                                value={accessCode} onChange={(e) => setAccessCode(e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                            />
-                        </div>
-                    )}
-
-                    {isSignUp && role === 'student' && (
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Year</label>
-                                <input
-                                    type="text" placeholder="e.g. Year 1"
-                                    value={academicYear} onChange={(e) => setAcademicYear(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Program</label>
-                                <input
-                                    type="text" placeholder="e.g. CS"
-                                    value={program} onChange={(e) => setProgram(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Intake</label>
-                                <input
-                                    type="text" placeholder="e.g. 9"
-                                    value={intake} onChange={(e) => setIntake(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Cohort Year</label>
-                                <input
-                                    type="text" placeholder="e.g. 2024"
-                                    value={cohortYear} onChange={(e) => setCohortYear(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                />
-                            </div>
-                        </div>
-                    )}
-
                     <div>
-                        <label className="block mb-1 text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
+                        <label className="block mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
                         <input
                             type="password" required
                             value={password} onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600  dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                         />
                     </div>
 
-                    <button type="submit" className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
-                        {isSignUp ? 'Create Account' : 'Sign In'}
+                    <button type="submit" className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+                        Sign In
                     </button>
                 </form>
 
                 <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700 text-center">
                     <p className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Demo Credentials</p>
-                    <div className="flex justify-center gap-4 text-sm text-slate-600 dark:text-slate-300">
-                        <div className="bg-slate-50 dark:bg-slate-800/50 px-3 py-1 rounded">Student: <strong>STU001</strong></div>
-                        <div className="bg-slate-50 dark:bg-slate-800/50 px-3 py-1 rounded">Lecturer: <strong>LEC001</strong></div>
+                    <div className="flex flex-wrap justify-center gap-3 text-sm text-slate-600 dark:text-slate-300">
+                        <div className="bg-slate-50 dark:bg-slate-800/50 px-3 py-1 rounded border border-slate-200 dark:border-slate-700">Student: <strong>S12345</strong></div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 px-3 py-1 rounded border border-slate-200 dark:border-slate-700">Lecturer: <strong>L001</strong></div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 px-3 py-1 rounded border border-slate-200 dark:border-slate-700">HoD: <strong>HOD1</strong></div>
                     </div>
-                    <p className="text-xs text-slate-400 mt-2">Password: <strong>password</strong></p>
+                    <p className="text-xs text-slate-400 mt-4">Password for all: <strong>password</strong></p>
                 </div>
             </div>
         </div>

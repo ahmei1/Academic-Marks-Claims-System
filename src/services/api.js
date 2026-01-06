@@ -25,6 +25,8 @@ export const ApiService = {
     },
 
     register: async (userData) => {
+        throw new Error('Registration is disabled. Please contact the Head of Department.');
+        /*
         // Check if user already exists
         const { data: existing } = await supabase
             .from('users')
@@ -35,6 +37,7 @@ export const ApiService = {
         if (existing) {
             throw new Error('User with this Registration Number already exists');
         }
+        */
 
         const { data, error } = await supabase.from('users').insert([{
             ...userData,
@@ -62,6 +65,18 @@ export const ApiService = {
         const { data, error } = await supabase.from('users').select('*');
         if (error) throw error;
         return data;
+    },
+
+    updateUser: async (id, updates) => {
+        const { data, error } = await supabase.from('users').update(updates).eq('id', id).select().single();
+        if (error) throw error;
+        return data;
+    },
+
+    deleteUser: async (id) => {
+        const { error } = await supabase.from('users').delete().eq('id', id);
+        if (error) throw error;
+        return true;
     },
 
     // Courses
@@ -252,7 +267,31 @@ export const ApiService = {
     },
 
     // Enrollments
-    joinCourse: async (enrollmentData) => {
+    joinCourse: async (enrollmentData, force = false) => {
+        // 1. Check if student is already enrolled in any *active* course
+        // Active = course that hasn't ended yet (endDate > now)
+        if (!force) {
+            // Get all enrollments for this student
+            const { data: myEnrollments } = await supabase
+                .from('enrollments')
+                .select('courseId')
+                .eq('studentId', enrollmentData.studentId);
+
+            if (myEnrollments && myEnrollments.length > 0) {
+                // Fetch details of these courses to check dates
+                const courseIds = myEnrollments.map(e => e.courseId);
+                const { data: activeCourses } = await supabase
+                    .from('courses')
+                    .select('*')
+                    .in('id', courseIds)
+                    .gt('endDate', new Date().toISOString()); // Only active ones
+
+                if (activeCourses && activeCourses.length > 0) {
+                    throw new Error(`Student is already enrolled in an active course: ${activeCourses[0].code}. Please complete it first or contact HoD.`);
+                }
+            }
+        }
+
         const { data: existing } = await supabase
             .from('enrollments')
             .select('*')
@@ -269,6 +308,50 @@ export const ApiService = {
         }]).select().single();
 
         if (error) throw error;
+        return data;
+    },
+
+    unenroll: async (studentId, courseId) => {
+        const { error } = await supabase
+            .from('enrollments')
+            .delete()
+            .eq('studentId', studentId)
+            .eq('courseId', courseId);
+
+        if (error) throw error;
+        return true;
+    },
+
+    getCourseEnrollments: async (courseId) => {
+        // Get enrollment records + student details
+        const { data, error } = await supabase
+            .from('enrollments')
+            .select('*, users!inner(*)') // Inner join on users to get student details
+            .eq('courseId', courseId)
+            .eq('users.role', 'student');
+
+        if (error) throw error;
+
+        // Flatten structure if needed, or return as is
+        // Returns: [{ id, studentId, courseId, users: { name, ... } }]
+        return data.map(e => ({
+            ...e,
+            student: e.users
+        }));
+    },
+
+    // Student Module Sheet
+    getStudentModules: async (studentId) => {
+        const { data, error } = await supabase
+            .from('student_modules')
+            .select('*')
+            .eq('studentId', studentId);
+
+        if (error) {
+            console.error("Error fetching student modules:", error);
+            // Default to empty if table doesn't exist yet (graceful fallback during migrations)
+            return [];
+        }
         return data;
     },
 

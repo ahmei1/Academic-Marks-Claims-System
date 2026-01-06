@@ -14,12 +14,13 @@ const STORAGE_KEYS = {
 // Initial Seed Data
 const SEED_DATA = {
     users: [
-        { id: 'u1', name: 'John Doe', email: 'student@univ.edu', role: 'student', password: 'password' },
-        { id: 'u2', name: 'Dr. Smith', email: 'lecturer@univ.edu', role: 'lecturer', password: 'password' }
+        { id: 'u1', name: 'John Doe', email: 'student@univ.edu', regNumber: 'S12345', role: 'student', password: 'password', intake: 'Sept 2024', cohortYear: '2024' },
+        { id: 'u2', name: 'Dr. Smith', email: 'lecturer@univ.edu', regNumber: 'L001', role: 'lecturer', password: 'password' },
+        { id: 'u3', name: 'Head of Dept', email: 'hod@univ.edu', regNumber: 'HOD1', role: 'hod', password: 'password' }
     ],
     courses: [
-        { id: 'c1', code: 'CS101', name: 'Intro to Computer Science', lecturerId: 'u2' },
-        { id: 'c2', code: 'MATH202', name: 'Advanced Mathematics', lecturerId: 'u2' }
+        { id: 'c1', code: 'CS101', name: 'Intro to Computer Science', lecturerId: 'u2', intake: 'Sept 2024', cohortYear: '2024', startDate: '2024-09-01', endDate: '2024-12-31' },
+        { id: 'c2', code: 'MATH202', name: 'Advanced Mathematics', lecturerId: 'u2', intake: 'Sept 2024', cohortYear: '2024', startDate: '2024-09-01', endDate: '2024-12-31' }
     ],
     marks: [
         { id: 'm1', studentId: 'u1', courseId: 'c1', cat: 25, fat: 60, assignment: 10, total: 95 },
@@ -99,9 +100,10 @@ export const MockDataService = {
 };
 
 export const AuthService = {
-    login: (email, password) => {
+    login: (identifier, password) => {
         const users = MockDataService.getUsers();
-        const user = users.find(u => u.email === email && u.password === password);
+        // Check regNumber (for students) or just ID/regNumber generic
+        const user = users.find(u => u.regNumber === identifier && u.password === password);
         if (user) {
             localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
             return user;
